@@ -2,7 +2,11 @@ package ch.makery.address;
 
 
 import java.io.IOException;
+import ch.makery.address.model.person;
+import ch.makery.address.view.personoverviewcontroller;
 
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,20 +15,34 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-
+	
+	
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private ObservableList<person> personData = FXCollections.observableArrayList();
 
+    
     @Override
     public void start(Stage primaryStage) {
+    	
+    	
+    	personData.add(new person("Hans", "Muster"));
+    	personData.add(new person("Ruth", "Mueller"));
+        personData.add(new person("Heinz", "Kurz"));
+        personData.add(new person("Cornelia", "Meier"));
+        personData.add(new person("Werner", "Meyer"));
+        personData.add(new person("Lydia", "Kunz"));
+        personData.add(new person("Anna", "Best"));
+        personData.add(new person("Stefan", "Meier"));
+        personData.add(new person("Martin", "Mueller"));
+    	
+    	
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("AddressApp_Change");
-
         initRootLayout();
-
         showPersonOverview();
     }
-
+   
     /**
      * Инициализирует корневой макет.
      */
@@ -32,7 +50,7 @@ public class MainApp extends Application {
         try {
             // Загружаем корневой макет из fxml файла.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("view/rootlayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
             // Отображаем сцену, содержащую корневой макет.
@@ -51,11 +69,16 @@ public class MainApp extends Application {
         try {
             // Загружаем сведения об адресатах.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/PersonOverview.fxml"));
+            loader.setLocation(MainApp.class.getResource("view/personoverview.fxml"));
             AnchorPane personOverview = (AnchorPane) loader.load();
-
             // Помещаем сведения об адресатах в центр корневого макета.
             rootLayout.setCenter(personOverview);
+            
+         // Даём контроллеру доступ к главному приложению.
+            personoverviewcontroller controller = loader.getController();
+            controller.setMainApp(this);
+            
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,8 +91,13 @@ public class MainApp extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
+   
 
     public static void main(String[] args) {
         launch(args);
+    }
+    
+   public ObservableList<person> getPersonData() {
+        return personData;
     }
 }

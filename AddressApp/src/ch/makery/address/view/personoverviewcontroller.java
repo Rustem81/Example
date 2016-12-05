@@ -36,7 +36,7 @@ public class personoverviewcontroller {
     
 
     // Ссылка на главное приложение.
-    private MainApp mainapp;
+    private MainApp mainApp;
 
     /**
      * Конструктор.
@@ -72,7 +72,7 @@ public class personoverviewcontroller {
      * @param mainApp
      */
     public void setMainApp(MainApp mainApp) {
-        this.mainapp = mainapp;
+        this.mainApp = mainApp;
 
         // Добавление в таблицу данных из наблюдаемого списка
         persontable.setItems(mainApp.getPersonData());
@@ -117,7 +117,45 @@ public class personoverviewcontroller {
         } else {
             // Ничего не выбрано.
             Alert alert = new Alert(AlertType.WARNING);
-            alert.initOwner(mainapp.getPrimaryStage());
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Person Selected");
+            alert.setContentText("Please select a person in the table.");
+
+            alert.showAndWait();
+        }
+    }
+    
+    /**
+     * Вызывается, когда пользователь кликает по кнопке New...
+     * Открывает диалоговое окно с дополнительной информацией нового адресата.
+     */
+    @FXML
+    private void handleNewPerson() {
+        person tempPerson = new person();
+        boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+        if (okClicked) {
+            mainApp.getPersonData().add(tempPerson);
+        }
+    }
+
+    /**
+     * Вызывается, когда пользователь кликает по кнопка Edit...
+     * Открывает диалоговое окно для изменения выбранного адресата.
+     */
+    @FXML
+    private void handleEditPerson() {
+        person selectedPerson = persontable.getSelectionModel().getSelectedItem();
+        if (selectedPerson != null) {
+            boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+            if (okClicked) {
+                showPersonDetails(selectedPerson);
+            }
+
+        } else {
+            // Ничего не выбрано.
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("No Selection");
             alert.setHeaderText("No Person Selected");
             alert.setContentText("Please select a person in the table.");

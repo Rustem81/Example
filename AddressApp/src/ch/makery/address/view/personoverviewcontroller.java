@@ -1,11 +1,14 @@
 package ch.makery.address.view;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import ch.makery.address.MainApp;
 import ch.makery.address.model.person;
+import ch.makery.address.util.DateUtil;
 
 public class personoverviewcontroller {
     @FXML
@@ -27,6 +30,10 @@ public class personoverviewcontroller {
     private Label citylabel;
     @FXML
     private Label birthdaylabel;
+    /**
+     * Вызывается, когда пользователь кликает по кнопке удаления.
+     */
+    
 
     // Ссылка на главное приложение.
     private MainApp mainapp;
@@ -47,6 +54,16 @@ public class personoverviewcontroller {
         // Инициализация таблицы адресатов с двумя столбцами.
         firstnamecolumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         lastnamecolumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        
+        
+
+        // Очистка дополнительной информации об адресате.
+        showPersonDetails(null);
+
+        // Слушаем изменения выбора, и при изменении отображаем
+        // дополнительную информацию об адресате.
+        persontable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showPersonDetails(newValue));
     }
 
     /**
@@ -76,6 +93,7 @@ public class personoverviewcontroller {
             streetlabel.setText(person.getStreet());
             postalcodelabel.setText(Integer.toString(person.getPostalCode()));
             citylabel.setText(person.getCity());
+            birthdaylabel.setText(DateUtil.format(person.getBirthday()));
 
             // TODO: Нам нужен способ для перевода дня рождения в тип String! 
             // birthdayLabel.setText(...);
@@ -87,6 +105,24 @@ public class personoverviewcontroller {
             postalcodelabel.setText("");
             citylabel.setText("");
             birthdaylabel.setText("");
+        }
+    }
+    
+    @FXML
+    private void handleDeletePerson() {
+    	
+    	int selectedIndex = persontable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex >= 0) {
+            persontable.getItems().remove(selectedIndex);
+        } else {
+            // Ничего не выбрано.
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.initOwner(mainapp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Person Selected");
+            alert.setContentText("Please select a person in the table.");
+
+            alert.showAndWait();
         }
     }
 }

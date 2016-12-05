@@ -60,4 +60,33 @@ public class personoverviewcontroller {
         // Добавление в таблицу данных из наблюдаемого списка
         persontable.setItems(mainApp.getPersonData());
     }
+    
+    
+    /**
+     * Заполняет все текстовые поля, отображая подробности об адресате.
+     * Если указанный адресат = null, то все текстовые поля очищаются.
+     * 
+     * @param person — адресат типа Person или null
+     */
+    private void showPersonDetails(person person) {
+        if (person != null) {
+            // Заполняем метки информацией из объекта person.
+            firstnamelabel.setText(person.getFirstName());
+            lastnamelabel.setText(person.getLastName());
+            streetlabel.setText(person.getStreet());
+            postalcodelabel.setText(Integer.toString(person.getPostalCode()));
+            citylabel.setText(person.getCity());
+
+            // TODO: Нам нужен способ для перевода дня рождения в тип String! 
+            // birthdayLabel.setText(...);
+        } else {
+            // Если Person = null, то убираем весь текст.
+            firstnamelabel.setText("");
+            lastnamelabel.setText("");
+            streetlabel.setText("");
+            postalcodelabel.setText("");
+            citylabel.setText("");
+            birthdaylabel.setText("");
+        }
+    }
 }
